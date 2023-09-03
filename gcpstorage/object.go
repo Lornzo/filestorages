@@ -23,15 +23,15 @@ func (o *Object) NewWriter(ctx context.Context) *Writer {
 	return &Writer{Writer: o.ObjectHandle.NewWriter(ctx)}
 }
 
-func (g *Object) SetMineType(minetype string) *Object {
-	return g
+func (o *Object) SetMineType(minetype string) *Object {
+	return o
 }
 
-func (g *Object) SetExtension(extension string) *Object {
-	return g
+func (o *Object) SetExtension(extension string) *Object {
+	return o
 }
 
-func (g *Object) Upload(ctx context.Context, data []byte) error {
+func (o *Object) Upload(ctx context.Context, data []byte) error {
 
 	type iWriter interface {
 		io.Writer
@@ -48,7 +48,7 @@ func (g *Object) Upload(ctx context.Context, data []byte) error {
 	ctx, cancel = context.WithTimeout(ctx, time.Second*50)
 	defer cancel()
 
-	writer = g.NewWriter(ctx)
+	writer = o.NewWriter(ctx)
 	writer.SetChunkSize(0)
 
 	if _, err = io.Copy(writer, bytes.NewBuffer(data)); err != nil {
@@ -60,4 +60,8 @@ func (g *Object) Upload(ctx context.Context, data []byte) error {
 	}
 	return nil
 
+}
+
+func (o *Object) Delete(ctx context.Context) error {
+	return o.ObjectHandle.Delete(ctx)
 }

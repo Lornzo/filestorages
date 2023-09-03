@@ -16,10 +16,14 @@ type LocalStorage struct {
 	directories []string
 }
 
+func (l *LocalStorage) getDirectoryPath() string {
+	return l.bucket + "/" + strings.Join(l.directories, "/")
+}
+
 func (l *LocalStorage) Upload(ctx context.Context, data []byte) error {
 
 	var (
-		dir          string = l.bucket + "/" + strings.Join(l.directories, "/")
+		dir          string = l.getDirectoryPath()
 		err          error
 		extension    string = l.getMineExtension(l.mineType)
 		filePathName string
@@ -42,14 +46,41 @@ func (l *LocalStorage) Upload(ctx context.Context, data []byte) error {
 	return nil
 }
 
+func (l *LocalStorage) Delete(ctx context.Context) error {
+
+	var (
+		dir          string = l.getDirectoryPath()
+		extension    string = l.getMineExtension(l.mineType)
+		err          error
+		filePathName string
+	)
+
+	if extension == "" {
+		return errors.New("not support mine type")
+	}
+
+	filePathName = fmt.Sprint(dir, "/", l.object, ".", extension)
+
+	if err = os.Remove(filePathName); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (l *LocalStorage) SetMineType(minetype string) *LocalStorage {
 	l.mineType = minetype
+	l.SetExtension(l.getMineExtension(minetype))
 	return l
 }
 
 func (l *LocalStorage) SetExtension(extension string) *LocalStorage {
 	l.extension = extension
 	return l
+}
+
+func (l *LocalStorage) GetExtension() string {
+	return l.extension
 }
 
 func (l *LocalStorage) Object(object string) *LocalStorage {
