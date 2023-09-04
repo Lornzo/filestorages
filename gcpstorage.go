@@ -12,6 +12,7 @@ type gcpObject struct {
 		SetMineType(minetype string) *gcpstorage.Object
 		SetExtension(extension string) *gcpstorage.Object
 		Upload(ctx context.Context, data []byte) error
+		Delete(ctx context.Context) error
 	}
 }
 
@@ -31,6 +32,10 @@ func (g *gcpObject) SetExtension(extension string) Object {
 
 func (l *gcpObject) Upload(ctx context.Context, data []byte) error {
 	return l.obj.Upload(ctx, data)
+}
+
+func (g *gcpObject) Delete(ctx context.Context) error {
+	return g.obj.Delete(ctx)
 }
 
 type gcpBucket struct {

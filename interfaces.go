@@ -21,6 +21,7 @@ type Object interface {
 	SetMineType(minetype string) Object
 	SetExtension(extension string) Object
 	Upload(ctx context.Context, data []byte) error
+	Delete(ctx context.Context) error
 }
 
 type Bucket interface {

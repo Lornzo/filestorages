@@ -20,6 +20,7 @@ type LocalStorage struct {
 		Object(object string) *localstorage.LocalStorage
 		SetDirectory(dirs ...string) *localstorage.LocalStorage
 		Bucket(bucket string) *localstorage.LocalStorage
+		Delete(ctx context.Context) error
 	}
 }
 
@@ -40,6 +41,10 @@ func (l *LocalStorage) SetExtension(extension string) Object {
 
 func (l *LocalStorage) Upload(ctx context.Context, data []byte) error {
 	return l.Storage.Upload(ctx, data)
+}
+
+func (l *LocalStorage) Delete(ctx context.Context) error {
+	return l.Storage.Delete(ctx)
 }
 
 // Bucket interface
