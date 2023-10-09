@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/Lornzo/filestorages/filestoragetypes"
 )
 
 type LocalStorage struct {
@@ -25,9 +27,15 @@ func (l *LocalStorage) Upload(ctx context.Context, data []byte) error {
 	var (
 		dir          string = l.getDirectoryPath()
 		err          error
-		extension    string = l.getMineExtension(l.mineType)
+		extension    string
 		filePathName string
 	)
+
+	if l.extension != "" {
+		extension = l.extension
+	} else {
+		extension = l.getMineExtension(l.mineType)
+	}
 
 	if extension == "" {
 		return errors.New("not support mine type")
@@ -107,5 +115,5 @@ func (l *LocalStorage) mkdir(path string) error {
 }
 
 func (l *LocalStorage) getMineExtension(mine string) string {
-	return l.extension
+	return string(filestoragetypes.GetExtensionFromMineType(filestoragetypes.MineType(mine)))
 }
